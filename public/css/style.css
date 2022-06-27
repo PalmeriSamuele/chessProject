@@ -2,13 +2,17 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: rgb(46, 51, 50);
 }
-
+#chess_tabe{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 #echequier {
     display: flex;
     flex-wrap: wrap;
-    margin-left: auto;
-    margin-right: auto;
+
 
 }
 
@@ -29,6 +33,10 @@ body {
 }
 
 
-.piece_img{
 
+.cible {
+    background-color: red;
+}
+.click{
+    border: 2px solid orange;
 }
