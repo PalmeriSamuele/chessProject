@@ -36,8 +36,7 @@ body {
 
 
 .cible {
-    background-color: rgba(14, 53, 69, 0.282);
-    border-radius: 50%;
+    background-color: rgba(104, 170, 196, 0.282);
 }
 .click{
     border: 2px solid orange;

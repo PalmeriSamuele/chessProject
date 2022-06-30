@@ -53,8 +53,8 @@ export class Chessboard{
                 new_case.addEventListener('click', this.possibleMoves);  // click sur une image _ retrour sa position et la piece
 
                 // drag and drop 
-                new_case.addEventListener('drop',  this.drop); 
-                new_case.addEventListener('dragover',  this.allowDrop); 
+                new_case.addEventListener('drop', drop); 
+                new_case.addEventListener('dragover',  allowDrop); 
         
                 new_case.style.width = this.w_board/8+"px";
                 new_case.style.height = this.w_board/8+"px";
@@ -82,12 +82,12 @@ export class Chessboard{
                
                 img.setAttribute("piece","");
                 img.setAttribute("color","");
-                img.addEventListener('dragstart', this.dragStart);
+                img.addEventListener('dragstart',dragStart);
 
                 if (this.plateau[i][j] == "pionn"){
-                    // on ajoute a chaque fois la proporete oiece qui vaut la piece adequate
+                    // on ajoute a chaque fois la proporete piece qui vaut la piece adequate
                     this.domArray[i][j].appendChild(img);
-                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","pion");
                     this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black");    
                     this.domArray[i][j].getElementsByTagName('img')[0].src = this.pion_b.img;
                     
@@ -175,26 +175,41 @@ export class Chessboard{
         }
              
     }
-// retourne les coordonées possibles pour une piece
+// affiche les coups possible pour la piece cliquer
     possibleMoves(e){
+        console.log(e.target);
         let domArray = toDArray(e.path[2].children);
-        unTarget(domArray);
+        unTarget(domArray);  // on retire tous ls marquages
         let name_piece,pos_row,pos_col,color;
         pos_row = this.pos_row;
         pos_col = this.pos_col;
         let  moves = [];
-        if (this.children[0]){
-            name_piece = this.children[0].getAttribute('piece');   // on recuepre les données des pieces
-            color =  this.children[0].getAttribute('color');
-        }  else {
-            name_piece = false;
+        if (this.children){
+            if (this.children[0]){
+                name_piece = this.children[0].getAttribute('piece');   // on recuepre les données des pieces
+                color =  this.children[0].getAttribute('color');
+            } 
         }
+        else {
+            console.log("oui ?");
+            unTarget(domArray);
+        }
+ 
+
         console.log(pos_row,pos_col);
-        if (name_piece == "pion" & color == "white"){
-            moves = [[pos_row-1,pos_col],[pos_row-2,pos_col]];
+        if (name_piece == "pion" && color == "white"){
+            moves.push([pos_row-1,pos_col]);
+            if(pos_row==6 ){
+                moves.push([pos_row-2,pos_col]);
+            }
+           
         }
-        if (name_piece == "pion" & color =="black"){
-            moves = [[pos_row+1,pos_col],[pos_row+2,pos_col]];
+        if (name_piece == "pion" && color == "black"){
+            moves.push([pos_row+1,pos_col]);
+            if(pos_row==1 ){
+                moves.push([pos_row+2,pos_col]);
+            }
+           
         }
         if (name_piece == "chev"){
 
@@ -285,82 +300,96 @@ export class Chessboard{
                 pos_col_--;
                
             }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
 
         }
         console.log(moves)
 
-
+        // affiche les cases possibles 
         if (moves){
             for (let i = 0; i < moves.length; i++) {
                 domArray[moves[i][0]][moves[i][1]].classList.toggle('cible');
             }
         }
 
+        blockNonPossibleMove(moves,domArray);
+
 
      }
+
+
 
     //  methode qui montre les coup possible pour les pieces
  
     
-    allowDrop(e) {
-        e.preventDefault();
-    }
-    dragStart(e) {
-        // on supprimer d'abord tous les styles applique 
-    
-        e.dataTransfer.setData('text', e.target.id);
-       
-
-    }
-    drop(e) {
-        console.log(e.path[1].children);
-        let domArray = toDArray(e.path[1].children);
-        console.log(domArray);
-        console.log(toDArray(e.path[1].children));
-        e.preventDefault();
-      
-        // get the draggable element
-        const id = e.dataTransfer.getData("text/plain");
-     
-        const draggable = document.getElementById(id);
-
-        unTarget(domArray);
-        
-        //console.log(e.target).
-        e.target.appendChild(draggable);
-    
-
-        
-    }
-    unTarget(){
-        this.domArray.forEach(elem => {
-            console.log( elem.classList);
-            elem.classList.remove('cible');
-        });
-    }
 
     switchColor(){
         this.color ? this.color = false : this.color = true;
     }
     
-
-
-
-
 };
-function unTarget(domArray){
+
+// fonction qui va bloquer toutes les case ou la pieces ne peux pas aller
+function blockNonPossibleMove(moves,domArray){
+    console.log(moves);
     console.log(domArray);
+    let temp;
+    for (let i = 0; i < domArray.length; i++) {
+        for (let j = 0; j < domArray.length; j++) {
+            
+            temp = [i,j];
+
+            if(!hasArray(moves,temp)){
+               domArray[i][j].removeEventListener('drop',drop);
+               domArray[i][j].removeEventListener('dragover',allowDrop)
+            }
+
+         
+ 
+        }
+        
+    }
+
+ }
+
+ function hasArray(liste,elem){
+    let ret = 0;
+    for (let i = 0; i < liste.length; i++) {
+       for (let j = 0; j < liste[i].length; j++) {
+        if(liste[i][j] === elem[j]){
+            ret++;
+            if(ret === 2){
+                return true;
+            }
+            
+        }else{
+            ret = 0;
+        }
+        
+       }
+       ret = 0;
+        
+    }
+    return false;
+}
+// fonction qui enleve un marquage sur une case
+function unTarget(domArray){
     domArray.forEach(elem => {
         elem.forEach(div => {
-            console.log( div.classList);
             if( div.classList.contains('cible')){
                 div.classList.remove('cible');
+                
             }
+            div.addEventListener('drop', drop); 
+            div.addEventListener('dragover',  allowDrop); 
         });
 
       
     });
 }
+
+//fonction qui met une liste en format [[][]..]  8x8
 function toDArray(liste){
     let ret = [];
     let array = [];
@@ -373,4 +402,34 @@ function toDArray(liste){
     }
 
     return ret;
+
+}
+
+
+// allow drag and drop
+
+function allowDrop(e) {
+    e.preventDefault();
+}
+function dragStart(e) {
+    // on supprimer d'abord tous les styles applique 
+
+    e.dataTransfer.setData('text', e.target.id);
+   
+
+}
+function drop(e) {
+    let domArray = toDArray(e.path[1].children);
+    e.preventDefault();
+  
+    // get the draggable element
+    const id = e.dataTransfer.getData("text/plain");
+ 
+    const draggable = document.getElementById(id);
+
+    unTarget(domArray);
+    
+    //console.log(e.target).
+    e.target.appendChild(draggable);
+
 }
