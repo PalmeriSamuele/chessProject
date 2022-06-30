@@ -23,10 +23,8 @@ export class Chessboard{
         this.reine_b = new ChessPiece('reine','b');
         this.reine_w = new ChessPiece('reine','w');
 
+        this.domArray ;
     
-    }
-    click(){
-        console.log(new_case.pos_row,new_case.pos_col);
     }
 
     // fonction qui cree le plateau de jeu
@@ -34,16 +32,17 @@ export class Chessboard{
         
         for (let i = 0; i < this.plateau.length; i++) {
             for (let j = 0; j < this.plateau.length; j++) {
-                let img = document.createElement("img");
-                img.draggable="true";
-                img.src = "";
-                img.id = "piece"+i+j
-                img.setAttribute("piece","");
-                img.addEventListener('dragstart', this.dragStart);
+                // let img = document.createElement("img");
+                // img.draggable="true";
+                // img.src = "";
+                // img.id = "piece"+i+j;
+
+    
+                // img.setAttribute("piece","");
+                // img.addEventListener('dragstart', this.dragStart);
 
                 let new_case = document.createElement("div");
 
-                new_case.appendChild(img);
                 new_case.pos_row = i;
                 new_case.pos_col = j;
                 // new_case.onclick = "this.click()";
@@ -51,7 +50,7 @@ export class Chessboard{
                 new_case.className+=this.color;
                 new_case.className+=" chess_case";
 
-                new_case.addEventListener('click', this.givePos); 
+                new_case.addEventListener('click', this.possibleMoves);  // click sur une image _ retrour sa position et la piece
 
                 // drag and drop 
                 new_case.addEventListener('drop',  this.drop); 
@@ -66,73 +65,109 @@ export class Chessboard{
             }
             
         }
-
+        this.domArray = toDArray(this.board.children);   // on met sous le format [[]...]
+       
     }
 
 // methode qui met a jour le plateau
     update(){
-        let domArray = this.toDArray(this.board.children);
+
         for (let i = 0; i < this.plateau.length; i++) {
             for (let j = 0; j < this.plateau.length; j++) {
 
+                let img = document.createElement("img");
+                img.draggable="true";
+                img.src = "";
+                img.id = "piece"+i+j;
+               
+                img.setAttribute("piece","");
+                img.setAttribute("color","");
+                img.addEventListener('dragstart', this.dragStart);
+
                 if (this.plateau[i][j] == "pionn"){
                     // on ajoute a chaque fois la proporete oiece qui vaut la piece adequate
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");   
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.pion_b.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black");    
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.pion_b.img;
+                    
 
                 }else if(this.plateau[i][j] == "pionb"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","pion");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.pion_w.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","pion");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","white");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.pion_w.img;
 
             
                 }else if(this.plateau[i][j] == "Tn"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.tour_b.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.tour_b.img;
 
 
                 }else if(this.plateau[i][j] == "foub"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","fou");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.fou_w.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","fou");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","white");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.fou_w.img;
 
                 }
                 else if(this.plateau[i][j] == "Tb"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.tour_w.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","tour");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","white");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.tour_w.img;
 
                 }
                 else if(this.plateau[i][j] == "foun"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","fou");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.fou_b.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","fou");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black"); 
+                     
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.fou_b.img;
 
                 }
                 else if(this.plateau[i][j] == "chevn"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","chev");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.chev_b.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","chev");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.chev_b.img;
 
                 }
                 else if(this.plateau[i][j] == "chevb"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","chev");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.chev_w.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","chev");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","white");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.chev_w.img;
 
                 }
                 else if(this.plateau[i][j] == "roib"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","roi");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.roi_w.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","roi");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","white");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.roi_w.img;
 
                 }
                 else if(this.plateau[i][j] == "roin"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","roi");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.roi_b.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","roi");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.roi_b.img;
 
                 }
                 else if(this.plateau[i][j] == "reineb"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","reine");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.reine_w.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","reine");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","white");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.reine_w.img;
 
                 }
                 else if(this.plateau[i][j] == "reinen"){
-                    domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","reine");
-                    domArray[i][j].getElementsByTagName('img')[0].src = this.reine_b.img;
+                    this.domArray[i][j].appendChild(img);
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("piece","reine");
+                    this.domArray[i][j].getElementsByTagName('img')[0].setAttribute("color","black");  
+                    this.domArray[i][j].getElementsByTagName('img')[0].src = this.reine_b.img;
 
                 }
   
@@ -140,61 +175,202 @@ export class Chessboard{
         }
              
     }
+// retourne les coordonées possibles pour une piece
+    possibleMoves(e){
+        let domArray = toDArray(e.path[2].children);
+        unTarget(domArray);
+        let name_piece,pos_row,pos_col,color;
+        pos_row = this.pos_row;
+        pos_col = this.pos_col;
+        let  moves = [];
+        if (this.children[0]){
+            name_piece = this.children[0].getAttribute('piece');   // on recuepre les données des pieces
+            color =  this.children[0].getAttribute('color');
+        }  else {
+            name_piece = false;
+        }
+        console.log(pos_row,pos_col);
+        if (name_piece == "pion" & color == "white"){
+            moves = [[pos_row-1,pos_col],[pos_row-2,pos_col]];
+        }
+        if (name_piece == "pion" & color =="black"){
+            moves = [[pos_row+1,pos_col],[pos_row+2,pos_col]];
+        }
+        if (name_piece == "chev"){
+
+            if( pos_row+2>=0&& pos_row+2<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+                moves.push([pos_row+2,pos_col+1]);
+            }
+            if( pos_row+2>=0&& pos_row+2<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+                moves.push([pos_row+2,pos_col-1]);
+            }
+            if( pos_row-2>=0&& pos_row-2<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+                moves.push([pos_row-2,pos_col+1]);
+            }
+            if( pos_row-2>=0&& pos_row-2<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+                moves.push([pos_row-2,pos_col-1]);
+            }
+            if( pos_row+1>=0&& pos_row+1<=7 && pos_col-2>=0 && pos_col-2<=7 ){
+                moves.push([pos_row+1,pos_col-2]);
+            }
+            if( pos_row+1>=0&& pos_row+1<=7 && pos_col+2>=0 && pos_col+2<=7 ){
+                moves.push([pos_row+1,pos_col+2]);
+            }
+            if( pos_row-1>=0&& pos_row-1<=7 && pos_col-2>=0 && pos_col-2<=7 ){
+                moves.push([pos_row-1,pos_col-2]);
+            }
+            if( pos_row-1>=0&& pos_row-1<=7 && pos_col+2>=0 && pos_col+2<=7 ){
+                moves.push([pos_row-1,pos_col+2]);
+            }
+            
+        }
+        if(name_piece == "fou"  || name_piece == "reine"){
+            let pos_row_ = pos_row, pos_col_ = pos_col; // on met pos_row et pos_col dans des varibles temporaires
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_row_++;
+                pos_col_++;
+                
+            }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_row_++;
+                pos_col_--;
+               
+            }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_row_--;
+                pos_col_++;
+               
+            }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_row_--;
+                pos_col_--;
+                
+            }
+        }
+        if(name_piece == "tour" || name_piece == "reine"){
+            let pos_row_ = pos_row, pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_row_++;
+                
+            }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_col_++;
+               
+            }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_row_--;
+                
+            }
+            pos_row_ = pos_row;
+            pos_col_ = pos_col;
+            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
+                moves.push([pos_row_,pos_col_]);
+                pos_col_--;
+               
+            }
+
+        }
+        console.log(moves)
+
+
+        if (moves){
+            for (let i = 0; i < moves.length; i++) {
+                domArray[moves[i][0]][moves[i][1]].classList.toggle('cible');
+            }
+        }
+
+
+     }
+
+    //  methode qui montre les coup possible pour les pieces
+ 
+    
     allowDrop(e) {
         e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
     }
     dragStart(e) {
-        console.log( e.target)
+        // on supprimer d'abord tous les styles applique 
+    
         e.dataTransfer.setData('text', e.target.id);
-        e.dataTransfer.dropEffect = "move";
-        console.log("drag over");
+       
+
     }
     drop(e) {
-
-
+        console.log(e.path[1].children);
+        let domArray = toDArray(e.path[1].children);
+        console.log(domArray);
+        console.log(toDArray(e.path[1].children));
         e.preventDefault();
-        console.log("drag down");
+      
         // get the draggable element
         const id = e.dataTransfer.getData("text/plain");
-        e.dataTransfer.dropEffect = "move";
+     
         const draggable = document.getElementById(id);
-        // console.log(e.target)
-        // console.log(draggable);
-        // add it to the drop target
-        console.log(draggable);
+
+        unTarget(domArray);
+        
+        //console.log(e.target).
         e.target.appendChild(draggable);
     
 
-        // let parent = e.target.parentNode;
-        // parent.getElementsByTagName("img")[0].src="";
-        // console.log("parent",parent);
-
         
     }
-
-    givePos(){
-       console.log(this.pos_col,this.pos_row);
-       console.log(this);
+    unTarget(){
+        this.domArray.forEach(elem => {
+            console.log( elem.classList);
+            elem.classList.remove('cible');
+        });
     }
 
     switchColor(){
         this.color ? this.color = false : this.color = true;
     }
     
-    toDArray(liste){
-        let ret = [];
-        let array = [];
-        for (let i = 0; i < liste.length+1; i++) {
-            if(i%8 == 0 & i!= 0){
-                ret.push(array);
-                array = []; 
+
+
+
+
+};
+function unTarget(domArray){
+    console.log(domArray);
+    domArray.forEach(elem => {
+        elem.forEach(div => {
+            console.log( div.classList);
+            if( div.classList.contains('cible')){
+                div.classList.remove('cible');
             }
-            array.push(liste[i]);
+        });
+
+      
+    });
+}
+function toDArray(liste){
+    let ret = [];
+    let array = [];
+    for (let i = 0; i < liste.length+1; i++) {
+        if(i%8 == 0 & i!= 0){
+            ret.push(array);
+            array = []; 
         }
-  
-        return ret;
+        array.push(liste[i]);
     }
 
+    return ret;
 }
-

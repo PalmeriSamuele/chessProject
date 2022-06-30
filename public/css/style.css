@@ -22,6 +22,7 @@ body {
     height: 50px;
     display: flex;
     flex-direction: column;
+    z-index: 3;
 }
 
 .false{
@@ -35,7 +36,8 @@ body {
 
 
 .cible {
-    background-color: red;
+    background-color: rgba(14, 53, 69, 0.282);
+    border-radius: 50%;
 }
 .click{
     border: 2px solid orange;
