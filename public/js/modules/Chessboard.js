@@ -50,7 +50,7 @@ export class Chessboard{
                 new_case.className+=this.color;
                 new_case.className+=" chess_case";
 
-                new_case.addEventListener('click', this.possibleMoves);  // click sur une image _ retrour sa position et la piece
+                new_case.addEventListener('click', possibleMoves);  
 
                 // drag and drop 
                 new_case.addEventListener('drop', drop); 
@@ -176,151 +176,7 @@ export class Chessboard{
              
     }
 // affiche les coups possible pour la piece cliquer
-    possibleMoves(e){
-        console.log(e.target);
-        let domArray = toDArray(e.path[2].children);
-        unTarget(domArray);  // on retire tous ls marquages
-        let name_piece,pos_row,pos_col,color;
-        pos_row = this.pos_row;
-        pos_col = this.pos_col;
-        let  moves = [];
-        if (this.children){
-            if (this.children[0]){
-                name_piece = this.children[0].getAttribute('piece');   // on recuepre les données des pieces
-                color =  this.children[0].getAttribute('color');
-            } 
-        }
-        else {
-            console.log("oui ?");
-            unTarget(domArray);
-        }
- 
-
-        console.log(pos_row,pos_col);
-        if (name_piece == "pion" && color == "white"){
-            moves.push([pos_row-1,pos_col]);
-            if(pos_row==6 ){
-                moves.push([pos_row-2,pos_col]);
-            }
-           
-        }
-        if (name_piece == "pion" && color == "black"){
-            moves.push([pos_row+1,pos_col]);
-            if(pos_row==1 ){
-                moves.push([pos_row+2,pos_col]);
-            }
-           
-        }
-        if (name_piece == "chev"){
-
-            if( pos_row+2>=0&& pos_row+2<=7 && pos_col+1>=0 && pos_col+1<=7 ){
-                moves.push([pos_row+2,pos_col+1]);
-            }
-            if( pos_row+2>=0&& pos_row+2<=7 && pos_col-1>=0 && pos_col-1<=7 ){
-                moves.push([pos_row+2,pos_col-1]);
-            }
-            if( pos_row-2>=0&& pos_row-2<=7 && pos_col+1>=0 && pos_col+1<=7 ){
-                moves.push([pos_row-2,pos_col+1]);
-            }
-            if( pos_row-2>=0&& pos_row-2<=7 && pos_col-1>=0 && pos_col-1<=7 ){
-                moves.push([pos_row-2,pos_col-1]);
-            }
-            if( pos_row+1>=0&& pos_row+1<=7 && pos_col-2>=0 && pos_col-2<=7 ){
-                moves.push([pos_row+1,pos_col-2]);
-            }
-            if( pos_row+1>=0&& pos_row+1<=7 && pos_col+2>=0 && pos_col+2<=7 ){
-                moves.push([pos_row+1,pos_col+2]);
-            }
-            if( pos_row-1>=0&& pos_row-1<=7 && pos_col-2>=0 && pos_col-2<=7 ){
-                moves.push([pos_row-1,pos_col-2]);
-            }
-            if( pos_row-1>=0&& pos_row-1<=7 && pos_col+2>=0 && pos_col+2<=7 ){
-                moves.push([pos_row-1,pos_col+2]);
-            }
-            
-        }
-        if(name_piece == "fou"  || name_piece == "reine"){
-            let pos_row_ = pos_row, pos_col_ = pos_col; // on met pos_row et pos_col dans des varibles temporaires
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_row_++;
-                pos_col_++;
-                
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_row_++;
-                pos_col_--;
-               
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_row_--;
-                pos_col_++;
-               
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_row_--;
-                pos_col_--;
-                
-            }
-        }
-        if(name_piece == "tour" || name_piece == "reine"){
-            let pos_row_ = pos_row, pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_row_++;
-                
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_col_++;
-               
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_row_--;
-                
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-            while( pos_row_>= 0 && pos_row_<=7 && pos_col_ >= 0 && pos_col_ <= 7){
-                moves.push([pos_row_,pos_col_]);
-                pos_col_--;
-               
-            }
-            pos_row_ = pos_row;
-            pos_col_ = pos_col;
-
-        }
-        console.log(moves)
-
-        // affiche les cases possibles 
-        if (moves){
-            for (let i = 0; i < moves.length; i++) {
-                domArray[moves[i][0]][moves[i][1]].classList.toggle('cible');
-            }
-        }
-
-        blockNonPossibleMove(moves,domArray);
-
-
-     }
-
-
-
-    //  methode qui montre les coup possible pour les pieces
+    
  
     
 
@@ -329,6 +185,360 @@ export class Chessboard{
     }
     
 };
+
+function possibleMoves(e){
+    console.log(e.target.parentNode);
+    let domArray = toDArray(e.path[2].children);
+    unTarget(domArray);  // on retire tous ls marquages
+    let name_piece,pos_row,pos_col,color;
+    pos_row = e.target.parentNode.pos_row;
+    pos_col = e.target.parentNode.pos_col;
+    let  moves = [];
+    if ( e.target.parentNode.children){
+        if ( e.target.parentNode.children[0]){
+            name_piece =  e.target.parentNode.children[0].getAttribute('piece');   // on recuepre les données des pieces
+            color =   e.target.parentNode.children[0].getAttribute('color');
+        } 
+    }
+    else {
+        unTarget(domArray);
+    }
+    // MOVES PION
+    console.log(pos_row,pos_col);
+    if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col].children.length ==0){
+        moves.push([pos_row-1,pos_col]);
+        if(pos_row==6  && domArray[pos_row-2][pos_col].children.length ==0 ){
+            moves.push([pos_row-2,pos_col]);
+        }
+       
+    }
+    if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col].children.length ==0){
+        moves.push([pos_row+1,pos_col]);
+        if(pos_row==1  && domArray[pos_row+2][pos_col].children.length ==0){
+            moves.push([pos_row+2,pos_col]);
+        }
+       
+    }
+    // MOVES CHEVALIER
+    if (name_piece == "chev"){
+
+        if( pos_row+2>=0&& pos_row+2<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+            moves.push([pos_row+2,pos_col+1]);
+        }
+        if( pos_row+2>=0&& pos_row+2<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+            moves.push([pos_row+2,pos_col-1]);
+        }
+        if( pos_row-2>=0&& pos_row-2<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+            moves.push([pos_row-2,pos_col+1]);
+        }
+        if( pos_row-2>=0&& pos_row-2<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+            moves.push([pos_row-2,pos_col-1]);
+        }
+        if( pos_row+1>=0&& pos_row+1<=7 && pos_col-2>=0 && pos_col-2<=7 ){
+            moves.push([pos_row+1,pos_col-2]);
+        }
+        if( pos_row+1>=0&& pos_row+1<=7 && pos_col+2>=0 && pos_col+2<=7 ){
+            moves.push([pos_row+1,pos_col+2]);
+        }
+        if( pos_row-1>=0&& pos_row-1<=7 && pos_col-2>=0 && pos_col-2<=7 ){
+            moves.push([pos_row-1,pos_col-2]);
+        }
+        if( pos_row-1>=0&& pos_row-1<=7 && pos_col+2>=0 && pos_col+2<=7 ){
+            moves.push([pos_row-1,pos_col+2]);
+        }
+        
+    }
+    console.log('e', e.target);
+    // MOVES FOU ET REINE
+    if(name_piece == "fou"  || name_piece == "reine"){
+        let pos_row_ = pos_row, pos_col_ = pos_col; // on met pos_row et pos_col dans des varibles temporaires
+        // mouvement HAUT DROITE
+        while( pos_row_+1>= 0 && pos_row_+1<=7 && pos_col_+1 >= 0 && pos_col_ +1<= 7  ){
+            if(domArray[pos_row_+1][pos_col_+1].children.length != 0){
+                if(domArray[pos_row_+1][pos_col_+1].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                }
+                else{   // on qjoute une derniere fois puis on part de la boucle
+                    pos_row_++;
+                    pos_col_++;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                } 
+            }
+                           
+            pos_row_++;
+            pos_col_++;
+            moves.push([pos_row_,pos_col_]);
+            
+            
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+        // mouvement HAUT GAUCHE
+        while( pos_row_+1>= 0 && pos_row_+1<=7 && pos_col_-1 >= 0 && pos_col_-1 <= 7   ){
+            if(domArray[pos_row_+1][pos_col_-1].children.length != 0){
+                if(domArray[pos_row_+1][pos_col_-1].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                } 
+                else{
+                    pos_row_++;
+                    pos_col_--;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+            }
+            pos_row_++;
+            pos_col_--;
+            moves.push([pos_row_,pos_col_]);
+            
+           
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+        // Mouvement BAS DROITE
+        while( pos_row-1>= 0 && pos_row_-1<=7 && pos_col_+1 >= 0 && pos_col_+1 <= 7  ){
+            if(domArray[pos_row_-1][pos_col_+1].children.length != 0){
+                if(domArray[pos_row_-1][pos_col_+1].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                } 
+                else{
+                    pos_row_--;
+                    pos_col_++;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+            }
+            pos_row_--;
+            pos_col_++;
+            moves.push([pos_row_,pos_col_]);
+            
+           
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+        // mouvement BAS GAUCHE
+        while( pos_row_-1>= 0 && pos_row_-1<=7 && pos_col_ -1>= 0 && pos_col_-1<= 7 ){  // && domArray[pos_row_-1][pos_col_-1].children.length ==0
+            if(domArray[pos_row_-1][pos_col_-1].children.length != 0){
+                if(domArray[pos_row_-1][pos_col_-1].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                }
+                else{
+                    pos_row_--;
+                    pos_col_--;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+                
+            }
+            pos_row_--;
+            pos_col_--;
+            moves.push([pos_row_,pos_col_]);
+            
+            
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+    }
+    // MOVES TOUR ET  REINE
+    if(name_piece == "tour" || name_piece == "reine"){
+        let pos_row_ = pos_row, pos_col_ = pos_col;
+        // mouvement HAUT
+        while( pos_row_+1>= 0 && pos_row_+1<=7 && pos_col_ >= 0 && pos_col_ <= 7 ){
+            if(domArray[pos_row_+1][pos_col_].children.length != 0){
+                if(domArray[pos_row_+1][pos_col_].children[0].getAttribute('color') == e.target.getAttribute('color')){    // ON VERIFIE SI IL Y A UN PION DE LA MEME COULEUR ALORS ON SARRETE
+                    break;
+                } 
+                else{
+                    pos_row_++;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+            }
+            pos_row_++;
+            moves.push([pos_row_,pos_col_]);
+            
+            
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+        // mouvement DROITE
+        while( pos_row_>= 0 && pos_row_<=7 && pos_col_+1 >= 0 && pos_col_+1 <= 7){
+            if(domArray[pos_row_][pos_col_+1].children.length != 0){
+                if(domArray[pos_row_][pos_col_+1].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                } 
+                else{
+                    pos_col_++;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+            }
+            pos_col_++;
+            moves.push([pos_row_,pos_col_]);
+           
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+        // mouvement GAUCHE
+        while( pos_row_-1>= 0 && pos_row_-1<=7 && pos_col_ >= 0 && pos_col_ <= 7 ){
+            if(domArray[pos_row_-1][pos_col_].children.length != 0){
+                if(domArray[pos_row_-1][pos_col_].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                } 
+                else{
+                    pos_row_--;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+            }
+            pos_row_--;
+            moves.push([pos_row_,pos_col_]);
+            
+            
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+        // MOUVEMENT BAS
+        while( pos_row_>= 0 && pos_row_<=7 && pos_col_-1 >= 0 && pos_col_-1 <= 7 ){
+            if(domArray[pos_row_][pos_col_-1].children.length != 0){
+                if(domArray[pos_row_][pos_col_-1].children[0].getAttribute('color') == e.target.getAttribute('color')){
+                    break;
+                } 
+                else{
+                    pos_col_--;
+                    moves.push([pos_row_,pos_col_]);
+                    break;
+                }
+            }
+            pos_col_--;
+            moves.push([pos_row_,pos_col_]);
+        
+           
+        }
+        pos_row_ = pos_row;
+        pos_col_ = pos_col;
+
+    }
+    // mouvement du ROI
+    if(name_piece== 'roi'){
+        if( pos_row+1>=0&& pos_row+1<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+            if(domArray[pos_row+1][pos_col+1].children.length != 0){
+                if(domArray[pos_row+1][pos_col+1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row+1,pos_col+1]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row+1,pos_col+1]);
+
+                
+            }
+          
+        }
+        if( pos_row+1>=0&& pos_row+1<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+            if(domArray[pos_row+1][pos_col-1].children.length != 0){
+                if(domArray[pos_row+1][pos_col-1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row+1,pos_col-1]);
+                }
+            }
+            else{
+                moves.push([pos_row+1,pos_col-1]);
+                
+            }
+        }
+        if( pos_row-1>=0&& pos_row-1<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+            if(domArray[pos_row-1][pos_col+1].children.length != 0){
+                if(domArray[pos_row-1][pos_col+1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row-1,pos_col+1]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row-1,pos_col+1]);
+
+                
+            }
+        }
+        if( pos_row-1>=0&& pos_row-1<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+            if(domArray[pos_row-1][pos_col-1].children.length != 0){
+                if(domArray[pos_row-1][pos_col-1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row-1,pos_col-1]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row-1,pos_col-1]);
+
+            }
+        }
+        if( pos_row+1>=0&& pos_row+1<=7 && pos_col>=0 && pos_col<=7 ){
+            if(domArray[pos_row+1][pos_col].children.length != 0){
+                if(domArray[pos_row+1][pos_col].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row+1,pos_col]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row+1,pos_col]);
+
+                
+            }
+        }
+        if( pos_row>=0&& pos_row<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+            if(domArray[pos_row][pos_col+1].children.length != 0){
+                if(domArray[pos_row][pos_col+1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row,pos_col+1]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row,pos_col+1]);
+
+            }
+        
+        }
+        if( pos_row-1>=0&& pos_row-1<=7 && pos_col>=0 && pos_col<=7 ){
+            if(domArray[pos_row-1][pos_col].children.length != 0){
+                if(domArray[pos_row-1][pos_col].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row-1,pos_col]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row-1,pos_col]);
+
+                
+            }
+        }
+        if( pos_row>=0&& pos_row<=7 && pos_col-1>=0 && pos_col-1<=7 ){
+            if(domArray[pos_row][pos_col-1].children.length != 0){
+                if(domArray[pos_row][pos_col-1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row-1,pos_col-1]);
+                  
+                }
+            }
+            else{
+                moves.push([pos_row,pos_col-1]);
+
+                
+            }
+        }                 
+   
+    }
+    console.log(moves)
+
+    // affiche les cases possibles 
+    if (moves.length > 0){
+        for (let i = 0; i < moves.length; i++) {
+            domArray[moves[i][0]][moves[i][1]].classList.toggle('cible');
+        }
+        blockNonPossibleMove(moves,domArray);
+    }
+
+    
+
+
+ }
 
 // fonction qui va bloquer toutes les case ou la pieces ne peux pas aller
 function blockNonPossibleMove(moves,domArray){
@@ -373,7 +583,7 @@ function blockNonPossibleMove(moves,domArray){
     }
     return false;
 }
-// fonction qui enleve un marquage sur une case
+// fonction qui enleve un marquage sur une case et qui faitr en sorte qu on puisse y cliquer une deuxieme fois
 function unTarget(domArray){
     domArray.forEach(elem => {
         elem.forEach(div => {
@@ -413,13 +623,16 @@ function allowDrop(e) {
 }
 function dragStart(e) {
     // on supprimer d'abord tous les styles applique 
-
+    console.log('MOVE ON');
     e.dataTransfer.setData('text', e.target.id);
+    possibleMoves(e);
    
 
 }
 function drop(e) {
     let domArray = toDArray(e.path[1].children);
+    unTarget(domArray);
+    
     e.preventDefault();
   
     // get the draggable element
@@ -427,9 +640,10 @@ function drop(e) {
  
     const draggable = document.getElementById(id);
 
-    unTarget(domArray);
-    
+   
     //console.log(e.target).
     e.target.appendChild(draggable);
 
 }
+
+
