@@ -3,6 +3,9 @@ body {
     padding: 0;
     box-sizing: border-box;
     background-color: rgb(46, 51, 50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 #chess_tabe{
     display: flex;
@@ -12,8 +15,6 @@ body {
 #echequier {
     display: flex;
     flex-wrap: wrap;
-
-
 }
 
 
@@ -26,11 +27,11 @@ body {
 }
 
 .false{
-    background-color: rgb(42, 107, 26);
+    background-color: rgba(35, 28, 28, 0.692);
 }
 
 .true{
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(209, 189, 189);
 }
 
 
@@ -40,4 +41,63 @@ body {
 }
 .click{
     border: 2px solid orange;
+}
+
+.game_box{
+    display: flex;
+    justify-content: center;
+
+}
+.logo {
+    width: 50%;
+}
+
+#play_btn{
+    padding: 10px 1rem;
+    width: 100px;
+    border: 2px solid white;
+    border-radius: 4px;
+    cursor: pointer;
+    color: rgb(46, 51, 50);
+    background: rgb(141, 101, 134);
+    transition: color ease 1s;
+    font-weight: bold;
+}
+#play_btn:hover, #play_btn:focus{
+    background-color: rgba(35, 28, 28, 0.692);
+    color: white;
+}
+
+.game_cmd{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-css{
+    
+    border: none;
+    padding: 8px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#dracula:hover, #dracula:focus{
+    color: #ccc;
+    background: rgba(35, 48, 83, 0.671);
+}
+
+#argentia:hover, #argentia:focus{
+    color: darkgray;
+    background: rgba(119, 119, 119, 0.671);
+}
+#scarlet:hover, #scarlet:focus{
+    color: darkgray;
+    background: rgb(97, 40, 40);
+}
+#classic:hover, #classic:hover {
+    background: rgb(209, 189, 189);
 }

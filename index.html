@@ -8,7 +8,23 @@
     <title>TerminalChess</title>
 </head>
 <body>
-    <div id="chess_tabe"> <div id="echequier"></div> </div>
+    <div class="game_box">
+        <div class='game_cmd'>
+            <img class='logo' src="./public/img/logo.png" alt="logo">
+            <button id="play_btn">play</button>
+            <div class="themes_box">
+                <input type="button" id="dracula" class='theme-css' name="theme" value="dracula" placeholder="dracula">
+                <input type="button" id="argentia"  class='theme-css' name="theme" value="argentia">
+                <input type="button" id="scarlet" class='theme-css' name="theme" value="scarlet">
+                <input type="button" id="classic" class='theme-css' name="theme" value="classic" checked>
+               
+            </div>
+        </div>
+       
+        <div id="chess_tabe"> <div id="echequier"></div> </div>
+    </div>
+  
+   
 
    
     <script src="public/js/main.js" type="module"></script>

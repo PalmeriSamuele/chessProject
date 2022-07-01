@@ -1,7 +1,7 @@
 import { ChessPiece } from "./ChessPiece.js";
 
 export class Chessboard{
-    constructor(w_board){
+    constructor(w_board, theme = ''){
         this.w_board = w_board;
         this.board = document.getElementById('echequier');
         this.board.style.width = this.w_board+17+"px";
@@ -24,12 +24,27 @@ export class Chessboard{
         this.reine_w = new ChessPiece('reine','w');
 
         this.domArray ;
+        // CHOOSE YOUR THEME 
+        this.theme = theme;
+        this.c_white,this.c_black;
+        if(this.theme.toLowerCase() == 'dracula'){
+            this.c_white = 'rgba(35, 48, 83, 0.671)';
+            this.c_black = 'rgb(125, 87, 133)';
+        }
+        else if(this.theme.toLowerCase()  == 'argentia'){
+            this.c_white = 'rgba(119, 119, 119, 0.671)';
+            this.c_black = 'rgb(0, 0, 0)';
+        }
+        else if(this.theme.toLowerCase()  == 'scarlet'){
+            this.c_white = 'rgb(97, 40, 40)';
+            this.c_black = 'rgb(134, 113, 113)';
+        }
     
     }
 
     // fonction qui cree le plateau de jeu
     create(){
-        
+        this.board.innerHTML='';
         for (let i = 0; i < this.plateau.length; i++) {
             for (let j = 0; j < this.plateau.length; j++) {
                 // let img = document.createElement("img");
@@ -46,7 +61,13 @@ export class Chessboard{
                 new_case.pos_row = i;
                 new_case.pos_col = j;
                 // new_case.onclick = "this.click()";
-
+                if (this.color){
+                    new_case.style.background = this.c_white;
+                }
+                else{
+                   new_case.style.background = this.c_black;
+                }
+                
                 new_case.className+=this.color;
                 new_case.className+=" chess_case";
 
@@ -79,8 +100,9 @@ export class Chessboard{
                 img.draggable="true";
                 img.src = "";
                 img.id = "piece"+i+j;
-               
+                img.style.cursor = 'pointer';
                 img.setAttribute("piece","");
+                img.removeEventListener('drop',drop);
                 img.setAttribute("color","");
                 img.addEventListener('dragstart',dragStart);
 
@@ -187,7 +209,6 @@ export class Chessboard{
 };
 
 function possibleMoves(e){
-    console.log(e.target.parentNode);
     let domArray = toDArray(e.path[2].children);
     unTarget(domArray);  // on retire tous ls marquages
     let name_piece,pos_row,pos_col,color;
@@ -204,7 +225,6 @@ function possibleMoves(e){
         unTarget(domArray);
     }
     // MOVES PION
-    console.log(pos_row,pos_col);
     if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col].children.length ==0){
         moves.push([pos_row-1,pos_col]);
         if(pos_row==6  && domArray[pos_row-2][pos_col].children.length ==0 ){
@@ -248,7 +268,7 @@ function possibleMoves(e){
         }
         
     }
-    console.log('e', e.target);
+  
     // MOVES FOU ET REINE
     if(name_piece == "fou"  || name_piece == "reine"){
         let pos_row_ = pos_row, pos_col_ = pos_col; // on met pos_row et pos_col dans des varibles temporaires
@@ -525,7 +545,6 @@ function possibleMoves(e){
         }                 
    
     }
-    console.log(moves)
 
     // affiche les cases possibles 
     if (moves.length > 0){
@@ -542,8 +561,6 @@ function possibleMoves(e){
 
 // fonction qui va bloquer toutes les case ou la pieces ne peux pas aller
 function blockNonPossibleMove(moves,domArray){
-    console.log(moves);
-    console.log(domArray);
     let temp;
     for (let i = 0; i < domArray.length; i++) {
         for (let j = 0; j < domArray.length; j++) {
@@ -554,6 +571,7 @@ function blockNonPossibleMove(moves,domArray){
                domArray[i][j].removeEventListener('drop',drop);
                domArray[i][j].removeEventListener('dragover',allowDrop)
             }
+
 
          
  
@@ -593,6 +611,8 @@ function unTarget(domArray){
             }
             div.addEventListener('drop', drop); 
             div.addEventListener('dragover',  allowDrop); 
+
+            
         });
 
       
@@ -623,26 +643,37 @@ function allowDrop(e) {
 }
 function dragStart(e) {
     // on supprimer d'abord tous les styles applique 
-    console.log('MOVE ON');
     e.dataTransfer.setData('text', e.target.id);
     possibleMoves(e);
    
 
 }
 function drop(e) {
-    let domArray = toDArray(e.path[1].children);
-    unTarget(domArray);
-    
     e.preventDefault();
-  
-    // get the draggable element
+    console.log(this);
+    console.log(e.path[0].localName);
+
+    let domArray = toDArray(e.path[1].children);
+    
+    unTarget(domArray);
     const id = e.dataTransfer.getData("text/plain");
  
     const draggable = document.getElementById(id);
+    if (e.path[0].localName == "div"){
+        e.target.appendChild(draggable);
+    }
+    else if (e.path[0].localName == "img"){
+        console.log('path',e.path[1].children[0]);
+        console.log(draggable);
+        if (e.path[1].children[0].getAttribute('color') != draggable.getAttribute('color')){
+            e.path[1].removeChild(e.path[1].children[0]);
+            e.path[1].appendChild(draggable);
+        }
+    }
+    unTarget(domArray);
 
    
-    //console.log(e.target).
-    e.target.appendChild(draggable);
+    
 
 }
 
