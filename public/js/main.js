@@ -34,3 +34,13 @@ document.getElementById('play_btn').addEventListener('click', function(){
 document.getElementById('logo').addEventListener('click',function(){
     document.getElementById('logo').style.transform = 'rotate(360deg)';
 })
+
+document.getElementById('turn_board').addEventListener('click', function(){
+    document.getElementById('echequier').style.transform = 'rotate(180deg)';
+    for (let i = 0; i < document.getElementById('echequier').children.length; i++) {
+        if( document.getElementById('echequier').children.length > 0){
+            document.getElementById('echequier').children[i].style.transform = 'rotate(180deg)';
+        }
+        
+    }
+})

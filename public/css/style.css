@@ -15,6 +15,8 @@ body {
 #echequier {
     display: flex;
     flex-wrap: wrap;
+    width: fit-content;
+    transition: transform ease 1s;
 }
 
 
@@ -27,11 +29,12 @@ body {
 }
 
 .false{
-    background-color: rgba(35, 28, 28, 0.692);
+    background-color: rgb(209, 189, 189);
 }
 
 .true{
-    background-color: rgb(209, 189, 189);
+   
+    background-color: rgba(35, 28, 28, 0.692);
 }
 
 
@@ -42,7 +45,7 @@ body {
 }
 .cible:after{
     content: '';
-    background-color: rgba(146, 114, 114, 0.699);
+    background-color: rgba(105, 82, 82, 0.699);
     position: absolute;
     left: 50%;
     top: 50%;
@@ -114,4 +117,14 @@ body {
 }
 #classic:hover, #classic:hover {
     background: rgb(209, 189, 189);
+}
+
+
+#turn_board{
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    transition: transform ease 1s;
+    width: 70px;
 }

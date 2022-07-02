@@ -32,8 +32,8 @@ export class Chessboard{
             this.c_black = 'rgb(125, 87, 133)';
         }
         else if(this.theme.toLowerCase()  == 'argentia'){
-            this.c_white = 'rgba(119, 119, 119, 0.671)';
-            this.c_black = 'rgb(0, 0, 0)';
+            this.c_white = 'rgba(11, 11, 11, 0.371)';
+            this.c_black = 'rgb(100, 100, 100)';
         }
         else if(this.theme.toLowerCase()  == 'scarlet'){
             this.c_white = 'rgb(97, 40, 40)';
@@ -101,6 +101,7 @@ export class Chessboard{
                 img.src = "";
                 img.id = "piece"+i+j;
                 img.style.cursor = 'pointer';
+                img.style.transform = 'transform 2s ease 1s'
                 img.setAttribute("piece","");
                 img.removeEventListener('drop',drop);
                 img.setAttribute("color","");
@@ -232,14 +233,18 @@ function possibleMoves(e){
         }
        
     }
-    if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col-1].children.length > 0){    // ajout moves de cote pion
-        if (domArray[pos_row-1][pos_col-1].children[0].getAttribute('color') != 'white'){
-            moves.push([pos_row-1,pos_col-1]);
+    if( pos_row-1>= 0 && pos_row-1<=7 && pos_col-1 >= 0 && pos_col-1 <= 7){
+        if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col-1].children.length > 0){    // ajout moves de cote pion
+            if (domArray[pos_row-1][pos_col-1].children[0].getAttribute('color') != 'white'){
+                moves.push([pos_row-1,pos_col-1]);
+            }
         }
     }
-    if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col+1].children.length > 0){
-        if (domArray[pos_row-1][pos_col+1].children[0].getAttribute('color') != 'white'){
-            moves.push([pos_row-1,pos_col+1]);
+    if( pos_row-1>= 0 && pos_row-1<=7 && pos_col+1 >= 0 && pos_col+1 <= 7){
+        if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col+1].children.length > 0){
+            if (domArray[pos_row-1][pos_col+1].children[0].getAttribute('color') != 'white'){
+                moves.push([pos_row-1,pos_col+1]);
+            }
         }
     }
     if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col].children.length ==0){
@@ -249,14 +254,18 @@ function possibleMoves(e){
         }
        
     }
-    if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col-1].children.length > 0){
-        if (domArray[pos_row+1][pos_col-1].children[0].getAttribute('color') != 'black'){
-            moves.push([pos_row+1,pos_col-1]);
+    if( pos_row+1>= 0 && pos_row+1<=7 && pos_col-1 >= 0 && pos_col-1 <= 7){
+        if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col-1].children.length > 0){
+            if (domArray[pos_row+1][pos_col-1].children[0].getAttribute('color') != 'black'){
+                moves.push([pos_row+1,pos_col-1]);
+            }
         }
     }
-    if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col+1].children.length > 0){
-        if (domArray[pos_row+1][pos_col+1].children[0].getAttribute('color') != 'black'){
-            moves.push([pos_row+1,pos_col+1]);
+    if( pos_row+1>= 0 && pos_row+1<=7 && pos_col+1 >= 0 && pos_col+1 <= 7){
+        if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col+1].children.length > 0){
+            if (domArray[pos_row+1][pos_col+1].children[0].getAttribute('color') != 'black'){
+                moves.push([pos_row+1,pos_col+1]);
+            }
         }
     }
 
@@ -681,8 +690,16 @@ function drop(e) {
     const id = e.dataTransfer.getData("text/plain");
  
     const draggable = document.getElementById(id);
-    if (e.path[0].localName == "div"){
+    if (e.path[0].localName == "div" && e.path[0].children.length == 0){
         e.target.appendChild(draggable);
+    }
+    else if(e.path[0].localName == "div" && e.path[0].children.length != 0){
+        console.log('path',e.path[1].children[0]);
+        console.log(draggable);
+        if (e.path[0].children[0].getAttribute('color') != draggable.getAttribute('color')){
+            e.path[0].removeChild(e.path[0].children[0]);
+            e.path[0].appendChild(draggable);
+        }
     }
     else if (e.path[0].localName == "img"){
         console.log('path',e.path[1].children[0]);
@@ -690,11 +707,10 @@ function drop(e) {
         if (e.path[1].children[0].getAttribute('color') != draggable.getAttribute('color')){
             e.path[1].removeChild(e.path[1].children[0]);
             e.path[1].appendChild(draggable);
-        }else{
-            
         }
     }
     unTarget(domArray);
+
 
    
     
