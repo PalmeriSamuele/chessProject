@@ -232,6 +232,16 @@ function possibleMoves(e){
         }
        
     }
+    if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col-1].children.length > 0){    // ajout moves de cote pion
+        if (domArray[pos_row-1][pos_col-1].children[0].getAttribute('color') != 'white'){
+            moves.push([pos_row-1,pos_col-1]);
+        }
+    }
+    if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col+1].children.length > 0){
+        if (domArray[pos_row-1][pos_col+1].children[0].getAttribute('color') != 'white'){
+            moves.push([pos_row-1,pos_col+1]);
+        }
+    }
     if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col].children.length ==0){
         moves.push([pos_row+1,pos_col]);
         if(pos_row==1  && domArray[pos_row+2][pos_col].children.length ==0){
@@ -239,6 +249,18 @@ function possibleMoves(e){
         }
        
     }
+    if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col-1].children.length > 0){
+        if (domArray[pos_row+1][pos_col-1].children[0].getAttribute('color') != 'black'){
+            moves.push([pos_row+1,pos_col-1]);
+        }
+    }
+    if (name_piece == "pion" && color == "black" && domArray[pos_row+1][pos_col+1].children.length > 0){
+        if (domArray[pos_row+1][pos_col+1].children[0].getAttribute('color') != 'black'){
+            moves.push([pos_row+1,pos_col+1]);
+        }
+    }
+
+
     // MOVES CHEVALIER
     if (name_piece == "chev"){
 
@@ -668,6 +690,8 @@ function drop(e) {
         if (e.path[1].children[0].getAttribute('color') != draggable.getAttribute('color')){
             e.path[1].removeChild(e.path[1].children[0]);
             e.path[1].appendChild(draggable);
+        }else{
+            
         }
     }
     unTarget(domArray);
