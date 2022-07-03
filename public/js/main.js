@@ -2,31 +2,57 @@
 import { Chessboard } from "./modules/Chessboard.js";
 
 // DRACULA ----- ARGENTIA-----SCARLET
-let chess = new Chessboard(window.innerWidth/2.13,'');   //on recupere la width de l'ecran
+let chess = new Chessboard(window.innerWidth/2.13,10);   //on recupere la width de l'ecran
 chess.create();
 // en fonction du button cliauer le theme sera changer
 document.getElementById('dracula').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,'dracula');
-    chess.create();
+    chess.changeTheme('dracula');
+   
     
 })
 document.getElementById('argentia').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,'argentia');
-    chess.create();
+    chess.changeTheme('argentia');
+    
 })
 
 document.getElementById('scarlet').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,'scarlet');
-    chess.create();
+    chess.changeTheme('scarlet');
+   
 })
 document.getElementById('classic').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,'');
-    chess.create();
+    chess.changeTheme('');
+  
 })
 
 
+// changer les minutes
+
+document.getElementById('30m').addEventListener('click',function(){
+    chess = new Chessboard(window.innerWidth/2.13,30);
+    chess.create();
+   
+    
+})
+document.getElementById('10m').addEventListener('click',function(){
+    chess = new Chessboard(window.innerWidth/2.13,10);
+    chess.create();
+    
+})
+
+document.getElementById('5m').addEventListener('click',function(){
+    chess = new Chessboard(window.innerWidth/2.13,5);
+    chess.create();
+   
+})
+document.getElementById('1m').addEventListener('click',function(){
+    chess = new Chessboard(window.innerWidth/2.13,1);
+    chess.create();
+  
+})
+
 document.getElementById('play_btn').addEventListener('click', function(){
-    //document.getElementById('play_btn').disabled = 'true';
+    document.getElementById('play_btn').disabled = 'true';
+    
     chess.update();
     
 })
