@@ -24,7 +24,13 @@
             
         </div>
        
-        <div id="chess_tabe"> <div id="echequier"></div> </div>
+        <div id="chess_table">
+            <div class="timers">
+                <div id='timer_black' class="timer">00:00</div>
+                <div id='timer_white' class="timer">00:00</div>
+            </div>
+            <div id="echequier"></div> 
+        </div>
         <div class="switch">
             <img id='turn_board' src="./public/img/switch.png" alt="">
         </div>
@@ -34,7 +40,10 @@
 
    
     <script src="public/js/main.js" type="module"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"></script>
+    <script src="/public/js/dist/easytimer.min.js"></script>
+    <script>
+        var timerInstance = new easytimer.Timer();
+    </script>
 
 
 </body>

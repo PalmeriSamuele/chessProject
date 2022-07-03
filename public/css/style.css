@@ -7,10 +7,8 @@ body {
     align-items: center;
     justify-content: center;
 }
-#chess_tabe{
+#chess_table{
     display: flex;
-    justify-content: center;
-    align-items: center;
 }
 #echequier {
     display: flex;
@@ -127,4 +125,13 @@ body {
     bottom: 0;
     transition: transform ease 1s;
     width: 70px;
+}
+.timers{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.timer{
+    font-size: 2rem;
+    color: rgb(189, 178, 178)
 }

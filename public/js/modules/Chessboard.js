@@ -1,5 +1,5 @@
 import { ChessPiece } from "./ChessPiece.js";
-
+import * as F from "./functions.js";
 export class Chessboard{
     constructor(w_board, theme = ''){
         this.w_board = w_board;
@@ -81,7 +81,7 @@ export class Chessboard{
                 new_case.style.height = this.w_board/8+"px";
                 this.board.appendChild(new_case); 
                
-                if (j != this.column-1){this.switchColor()}
+                if (j != this.column-1){this.color = switchColor(this.color)}
               
             }
             
@@ -92,7 +92,27 @@ export class Chessboard{
 
 // methode qui met a jour le plateau
     update(){
+        // timer black 
+        window.timer_black = new  easytimer.Timer();
+        window.timer_black.start({countdown: true, startValues: {minutes: 10}});
 
+        window.timer_black.addEventListener('secondsUpdated', function (e) {
+        document.getElementById('timer_black').innerHTML = timer_black.getTimeValues().toString().substring(3);
+        });
+        
+
+        // timer white
+        window.timer_white = new  easytimer.Timer();
+        window.timer_white.start({countdown: true, startValues: {minutes: 10}});
+
+        window.timer_white.addEventListener('secondsUpdated', function (e) {
+            console.log(timer_white.getTimeValues().toString().substring(3));
+        document.getElementById('timer_white').innerHTML = timer_white.getTimeValues().toString().substring(3);
+        });
+
+
+
+       
         for (let i = 0; i < this.plateau.length; i++) {
             for (let j = 0; j < this.plateau.length; j++) {
 
@@ -103,7 +123,7 @@ export class Chessboard{
                 img.style.cursor = 'pointer';
                 img.style.transform = 'transform 2s ease 1s'
                 img.setAttribute("piece","");
-                img.removeEventListener('drop',drop);
+               
                 img.setAttribute("color","");
                 img.addEventListener('dragstart',dragStart);
 
@@ -196,25 +216,30 @@ export class Chessboard{
   
             }
         }
-             
+        turnToWho(this.domArray,true);
+        window.timer_black.pause();
     }
 // affiche les coups possible pour la piece cliquer
     
  
-    
 
-    switchColor(){
-        this.color ? this.color = false : this.color = true;
-    }
     
 };
-
+function switchColor(color){
+    if(color){
+        return false;
+    }
+    else{
+        return true;
+    }
+}
 function possibleMoves(e){
     let domArray = toDArray(e.path[2].children);
     unTarget(domArray);  // on retire tous ls marquages
     let name_piece,pos_row,pos_col,color;
     pos_row = e.target.parentNode.pos_row;
     pos_col = e.target.parentNode.pos_col;
+    let nb_kings_moves = 0;
     let  moves = [];
     if ( e.target.parentNode.children){
         if ( e.target.parentNode.children[0]){
@@ -535,19 +560,7 @@ function possibleMoves(e){
                 
             }
         }
-        if( pos_row>=0&& pos_row<=7 && pos_col+1>=0 && pos_col+1<=7 ){
-            if(domArray[pos_row][pos_col+1].children.length != 0){
-                if(domArray[pos_row][pos_col+1].children[0].getAttribute('color') != e.target.getAttribute('color')){
-                    moves.push([pos_row,pos_col+1]);
-                  
-                }
-            }
-            else{
-                moves.push([pos_row,pos_col+1]);
 
-            }
-        
-        }
         if( pos_row-1>=0&& pos_row-1<=7 && pos_col>=0 && pos_col<=7 ){
             if(domArray[pos_row-1][pos_col].children.length != 0){
                 if(domArray[pos_row-1][pos_col].children[0].getAttribute('color') != e.target.getAttribute('color')){
@@ -561,10 +574,24 @@ function possibleMoves(e){
                 
             }
         }
+        if( pos_row>=0&& pos_row<=7 && pos_col+1>=0 && pos_col+1<=7 ){
+            if(domArray[pos_row][pos_col+1].children.length != 0){
+                if(domArray[pos_row][pos_col+1].children[0].getAttribute('color') != e.target.getAttribute('color')){
+                    moves.push([pos_row,pos_col+1]);
+                  
+                }
+            }
+            else {
+                moves.push([pos_row,pos_col+1]);
+
+
+            }
+        
+        }
         if( pos_row>=0&& pos_row<=7 && pos_col-1>=0 && pos_col-1<=7 ){
             if(domArray[pos_row][pos_col-1].children.length != 0){
                 if(domArray[pos_row][pos_col-1].children[0].getAttribute('color') != e.target.getAttribute('color')){
-                    moves.push([pos_row-1,pos_col-1]);
+                    moves.push([pos_row,pos_col-1]);
                   
                 }
             }
@@ -640,6 +667,7 @@ function unTarget(domArray){
                 div.classList.remove('cible');
                 
             }
+  
             div.addEventListener('drop', drop); 
             div.addEventListener('dragover',  allowDrop); 
 
@@ -673,7 +701,7 @@ function allowDrop(e) {
     e.preventDefault();
 }
 function dragStart(e) {
-    // on supprimer d'abord tous les styles applique 
+    // on supprimer d'abord tous les styles applique
     e.dataTransfer.setData('text', e.target.id);
     possibleMoves(e);
    
@@ -710,6 +738,16 @@ function drop(e) {
         }
     }
     unTarget(domArray);
+    if(draggable.getAttribute('color') == 'white'){
+        turnToWho(domArray,false);
+        window.timer_white.pause();
+        window.timer_black.start();
+    }else{
+        turnToWho(domArray,true);
+        window.timer_black.pause();
+        window.timer_white.start();
+    }
+    
 
 
    
@@ -717,4 +755,28 @@ function drop(e) {
 
 }
 
-
+// fonction qui desactive le click et le drag 7drop en fonction de la personne qui joue
+function turnToWho(array,bool){
+    let turn;
+    if(bool){
+        turn = 'white';
+    }
+    else {
+        turn = 'black'
+    }
+    console.log(array);
+    console.log('hey');
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length; j++) {
+            if (array[i][j].children.length > 0 && array[i][j].children[0].getAttribute('color') != turn){
+                array[i][j].children[0].removeEventListener('dragstart',dragStart);        // on enleve le drag
+                array[i][j].removeEventListener('click',possibleMoves);          // on enleve le click
+                console.log( array[i][j].children[0])
+            }else if(array[i][j].children.length > 0 && array[i][j].children[0].getAttribute('color') == turn ){
+                array[i][j].children[0].addEventListener('dragstart',dragStart);      // et on les rajoute
+                array[i][j].addEventListener('click',possibleMoves);
+            }
+            
+        }
+    }
+}
