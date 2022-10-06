@@ -1,11 +1,15 @@
 import { ChessPiece } from "./ChessPiece.js";
-import {
+import { turnToWho,
         switchColor,
         possibleMoves,
         toDArray,
         allowDrop,
         dragStart,
-        drop}  from "./functions.js";
+        drop,
+    }  from "./functions.js";
+
+
+
 export class Chessboard{
     constructor(w_board, time_choose){
         this.w_board = w_board;
@@ -89,25 +93,8 @@ export class Chessboard{
 // methode qui met a jour le plateau
     update(){
         // timer black 
-        window.timer_black = new  easytimer.Timer();
-        window.timer_black.start({countdown: true, startValues: {minutes: this.time_choose}});
-
-        window.timer_black.addEventListener('secondsUpdated', function (e) {
-        document.getElementById('timer_black').innerHTML = timer_black.getTimeValues().toString().substring(3);
-        });
-        
-
-        // timer white
-        window.timer_white = new  easytimer.Timer();
-        window.timer_white.start({countdown: true, startValues: {minutes: this.time_choose}});
-
-        window.timer_white.addEventListener('secondsUpdated', function (e) {
-        document.getElementById('timer_white').innerHTML = timer_white.getTimeValues().toString().substring(3);
-        });
-
-
-
-       
+        window.timer_black.start({countdown: true, startValues: {minutes:window.chrono}});
+        window.timer_white.start({countdown: true, startValues: {minutes: window.chrono}});
         for (let i = 0; i < this.plateau.length; i++) {
             for (let j = 0; j < this.plateau.length; j++) {
 
@@ -251,27 +238,4 @@ export class Chessboard{
 
     
 };
-function turnToWho(array,bool){
-    let turn;
-    if(bool){
-        turn = 'white';
-    }
-    else {
-        turn = 'black'
-    }
-    console.log(array);
-    console.log('hey');
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array.length; j++) {
-            if (array[i][j].children.length > 0 && array[i][j].children[0].getAttribute('color') != turn){
-                array[i][j].children[0].removeEventListener('dragstart',dragStart);        // on enleve le drag
-                array[i][j].removeEventListener('click',possibleMoves);          // on enleve le click
-                console.log( array[i][j].children[0])
-            }else if(array[i][j].children.length > 0 && array[i][j].children[0].getAttribute('color') == turn ){
-                array[i][j].children[0].addEventListener('dragstart',dragStart);      // et on les rajoute
-                array[i][j].addEventListener('click',possibleMoves);
-            }
-            
-        }
-    }
-}
+

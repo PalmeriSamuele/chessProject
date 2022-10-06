@@ -1,8 +1,8 @@
 
 import { Chessboard } from "./modules/Chessboard.js";
-
+window.chrono = 10;
 // DRACULA ----- ARGENTIA-----SCARLET
-let chess = new Chessboard(window.innerWidth/2.13,10);   //on recupere la width de l'ecran
+var chess = new Chessboard(window.innerWidth/2.13,10);   //on recupere la width de l'ecran
 chess.create();
 // en fonction du button cliauer le theme sera changer
 document.getElementById('dracula').addEventListener('click',function(){
@@ -28,29 +28,26 @@ document.getElementById('classic').addEventListener('click',function(){
 // changer les minutes
 
 document.getElementById('30m').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,30);
-    chess.create();
-   
+    
+    window.chrono = 30;
     
 })
 document.getElementById('10m').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,10);
-    chess.create();
+    window.chrono = 10;
     
 })
 
 document.getElementById('5m').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,5);
-    chess.create();
+    window.chrono = 5;
    
 })
 document.getElementById('1m').addEventListener('click',function(){
-    chess = new Chessboard(window.innerWidth/2.13,1);
-    chess.create();
+    window.chrono = 1;
   
 })
 
 document.getElementById('play_btn').addEventListener('click', function(){
+    createTimers(window.chrono)
     document.getElementById('play_btn').disabled = 'true';
     
     chess.update();
@@ -70,3 +67,18 @@ document.getElementById('turn_board').addEventListener('click', function(){
         
     }
 })
+
+function createTimers(chrono){
+    window.timer_black = new  easytimer.Timer();
+    window.timer_black.addEventListener('secondsUpdated', function (e) {
+        document.getElementById('timer_black').innerHTML = timer_black.getTimeValues().toString().substring(3);
+    });
+
+
+    // timer white
+    window.timer_white = new  easytimer.Timer();
+    window.timer_white.addEventListener('secondsUpdated', function (e) {
+        document.getElementById('timer_white').innerHTML = timer_white.getTimeValues().toString().substring(3);
+    });
+
+}

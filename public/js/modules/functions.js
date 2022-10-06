@@ -1,15 +1,3 @@
-export function turnToWho(array){
-    let chess_game = setInterval(function(){
-        let turn = true;
-        for (let i = 0; i < array.length; i++) {
-            if (turn){
-                if (array[i].children > 0 && array[i].children[0].getAttribute('color') == 'white'){
-                    array[i].children[0].removeAttribute('dragstart',dragStart);
-                }
-            }
-        }
-    },1000)
-}
 
 
 
@@ -36,9 +24,7 @@ export function possibleMoves(e){
             color =   e.target.parentNode.children[0].getAttribute('color');
         } 
     }
-    else {
-        unTarget(domArray);
-    }
+
     // MOVES PION
     if (name_piece == "pion" && color == "white" && domArray[pos_row-1][pos_col].children.length ==0){
         moves.push([pos_row-1,pos_col]);
@@ -162,6 +148,7 @@ export function possibleMoves(e){
         pos_col_ = pos_col;
         // Mouvement BAS DROITE
         while( pos_row-1>= 0 && pos_row_-1<=7 && pos_col_+1 >= 0 && pos_col_+1 <= 7  ){
+            console.log(domArray[pos_row_-1][pos_col_+1]);
             if(domArray[pos_row_-1][pos_col_+1].children.length != 0){
                 if(domArray[pos_row_-1][pos_col_+1].children[0].getAttribute('color') == e.target.getAttribute('color')){
                     break;
@@ -394,12 +381,9 @@ export function possibleMoves(e){
     }
 
     // affiche les cases possibles 
-    if (moves.length > 0){
-        for (let i = 0; i < moves.length; i++) {
-            domArray[moves[i][0]][moves[i][1]].classList.toggle('cible');
-        }
-        blockNonPossibleMove(moves,domArray);
-    }
+    
+    blockNonPossibleMove(moves,domArray);
+    
 
  
 
@@ -419,6 +403,9 @@ export function blockNonPossibleMove(moves,domArray){
             if(!hasArray(moves,temp)){
                domArray[i][j].removeEventListener('drop',drop);
                domArray[i][j].removeEventListener('dragover',allowDrop)
+            }
+            else{
+                domArray[i][j].classList.toggle('cible');
             }
 
 
@@ -501,11 +488,11 @@ export function dragStart(e) {
 export function drop(e) {
     e.preventDefault();
     console.log(this);
-    console.log(e.path[0].localName);
+    console.log(e);
 
     let domArray = toDArray(e.path[1].children);
     
-    unTarget(domArray);
+    
     const id = e.dataTransfer.getData("text/plain");
  
     const draggable = document.getElementById(id);
@@ -521,6 +508,7 @@ export function drop(e) {
         }
     }
     else if (e.path[0].localName == "img"){
+        console.log(e.path[1]);
         console.log('path',e.path[1].children[0]);
         console.log(draggable);
         if (e.path[1].children[0].getAttribute('color') != draggable.getAttribute('color')){
@@ -528,18 +516,49 @@ export function drop(e) {
             e.path[1].appendChild(draggable);
         }
     }
-    unTarget(domArray);
-    if(draggable.getAttribute('color') == 'white'){
-        turnToWho(domArray,false);
-        window.timer_white.pause();
-        window.timer_black.start();
-    }else{
-        turnToWho(domArray,true);
-        window.timer_black.pause();
-        window.timer_white.start();
+    
+    if (draggable != null){
+        if(draggable.getAttribute('color') == 'white'){
+            turnToWho(domArray,false);
+            window.timer_white.pause();
+            window.timer_black.start();
+        }else{
+            turnToWho(domArray,true);
+            window.timer_black.pause();
+            window.timer_white.start();
+        }
     }
+    unTarget(domArray);
+    console.log(domArray)
+
 
 
 }
 
 // fonction qui desactive le click et le drag 7drop en fonction de la personne qui joue
+export function turnToWho(array,bool){
+    let turn;
+    if(bool){
+        turn = 'white';
+    }
+    else {
+        turn = 'black'
+    }
+    console.log(array);
+
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length; j++) {
+            if (array[i][j].children.length > 0 && array[i][j].children[0].getAttribute('color') != turn){
+                array[i][j].children[0].removeEventListener('dragstart',dragStart);        // on enleve le drag
+                array[i][j].removeEventListener('click',possibleMoves);          // on enleve le click
+                array[i][j].addEventListener('drop',drop);
+            }else if(array[i][j].children.length > 0 && array[i][j].children[0].getAttribute('color') == turn ){
+                array[i][j].children[0].addEventListener('dragstart',dragStart);      // et on les rajoute
+                array[i][j].addEventListener('click',possibleMoves);
+                array[i][j].removeEventListener('drop',drop);
+            }
+            
+        }
+    }
+}
+
